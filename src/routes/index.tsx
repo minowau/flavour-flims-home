@@ -177,12 +177,7 @@ function Scene({
 
 function Intro({ onDone }: { onDone: () => void }) {
   const reduced = useReducedMotion();
-  const lines = [
-    "Every family has one recipe...",
-    "that was never written.",
-    "It was remembered...",
-    "through love.",
-  ];
+  const lines = ["Every family has one recipe...", "that was never written.", "It was remembered through love."];
   const [step, setStep] = useState(0);
 
   useEffect(() => {
@@ -192,38 +187,52 @@ function Intro({ onDone }: { onDone: () => void }) {
     }
     const timers: ReturnType<typeof setTimeout>[] = [];
     lines.forEach((_, i) => {
-      timers.push(setTimeout(() => setStep(i + 1), 1400 * (i + 1)));
+      timers.push(setTimeout(() => setStep(i + 1), 900 * (i + 1)));
     });
-    timers.push(setTimeout(onDone, 1400 * lines.length + 1600));
-    return () => timers.forEach(clearTimeout);
+    timers.push(setTimeout(onDone, 900 * lines.length + 900));
+
+    // dismiss on any interaction
+    const skip = () => onDone();
+    window.addEventListener("wheel", skip, { passive: true, once: true });
+    window.addEventListener("touchstart", skip, { passive: true, once: true });
+    window.addEventListener("keydown", skip, { once: true });
+    return () => {
+      timers.forEach(clearTimeout);
+      window.removeEventListener("wheel", skip);
+      window.removeEventListener("touchstart", skip);
+      window.removeEventListener("keydown", skip);
+    };
   }, [onDone, reduced]);
 
   return (
     <motion.div
       initial={{ opacity: 1 }}
-      animate={{ opacity: step > lines.length ? 0 : 1 }}
-      transition={{ duration: 1.2 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.7 }}
       className="fixed inset-0 z-[60] flex items-center justify-center bg-[oklch(0.12_0.02_55)] px-6"
     >
-      <div className="relative max-w-2xl text-center">
+      <div className="relative flex max-w-2xl flex-col items-center text-center">
         <AnimatePresence mode="wait">
           <motion.p
             key={step}
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -6 }}
-            transition={{ duration: 1.1, ease: "easeOut" }}
+            transition={{ duration: 0.7, ease: "easeOut" }}
             className="font-display text-2xl leading-relaxed text-brand-cream md:text-4xl"
           >
-            {step === 0 ? "" : lines[step - 1]}
+            {step === 0 ? "Sastra Flavours" : lines[step - 1]}
           </motion.p>
         </AnimatePresence>
         <button
           onClick={onDone}
-          className="absolute -bottom-16 left-1/2 -translate-x-1/2 text-xs uppercase tracking-[0.3em] text-brand-cream/50 transition hover:text-brand-turmeric"
+          className="mt-16 rounded-full border border-brand-cream/30 px-5 py-2 text-[11px] font-semibold uppercase tracking-[0.3em] text-brand-cream/80 transition hover:border-brand-turmeric hover:text-brand-turmeric"
         >
-          Skip intro
+          Skip intro →
         </button>
+        <p className="mt-3 text-[10px] uppercase tracking-widest text-brand-cream/40">
+          or scroll to begin
+        </p>
       </div>
     </motion.div>
   );
