@@ -498,38 +498,11 @@ function Reveal() {
   );
 }
 
-const products = [
-  {
-    name: "Grandma's Summer Mango Pickle",
-    telugu: "మామిడి ఆవకాయ",
-    story:
-      "The first jar was always hidden — because children finished it before it was ready.",
-    note: "Tastes best with hot rice and a spoon of ghee.",
-    tag: "Signature pickle",
-    image: productPickle,
-    hover: "Warning: extra rice required.",
-  },
-  {
-    name: "Evening Energy Laddus",
-    telugu: "న్యూట్రి లడ్డు",
-    story:
-      "Prepared before every exam — because Amma believed healthy minds begin with healthy food.",
-    note: "One a day. Two, if Amma isn't watching.",
-    tag: "Nutri-mix",
-    image: productLaddu,
-    hover: "Disappears faster than expected.",
-  },
-  {
-    name: "Sunday Kitchen Masala",
-    telugu: "ఆదివారం మసాలా",
-    story:
-      "The aroma that made everyone leave the TV and come running to lunch.",
-    note: "A pinch is a memory. A spoon is a Sunday.",
-    tag: "Spice blend",
-    image: productMasala,
-    hover: "The secret ingredient is always love.",
-  },
-];
+import { products as catalog } from "@/lib/products";
+
+const featured = catalog.filter((p) =>
+  ["grandmas-summer-mango-pickle", "nutri-laddu", "sunday-kitchen-masala"].includes(p.slug),
+);
 
 function Products() {
   return (
@@ -548,9 +521,9 @@ function Products() {
         </div>
 
         <div className="grid gap-8 md:grid-cols-3">
-          {products.map((p, i) => (
+          {featured.map((p, i) => (
             <motion.article
-              key={p.name}
+              key={p.slug}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-80px" }}
@@ -580,11 +553,11 @@ function Products() {
                 <h3 className="font-display text-2xl text-brand-brown">{p.name}</h3>
                 <p className="mt-1 font-telugu text-brand-terracotta">{p.telugu}</p>
                 <p className="mt-4 font-serif italic leading-relaxed text-brand-brown/80">
-                  “{p.story}”
+                  “{p.tagline}”
                 </p>
                 <div className="mt-5 rounded-2xl bg-brand-turmeric/25 p-3 text-sm text-brand-brown/90">
                   <span className="font-semibold text-brand-brown">Amma's note · </span>
-                  {p.note}
+                  {p.amma_note}
                 </div>
                 <div className="mt-6 flex items-center gap-3">
                   <a
@@ -595,20 +568,37 @@ function Products() {
                     rel="noreferrer"
                     className="flex-1 rounded-full bg-brand-forest px-4 py-2.5 text-center text-sm font-semibold text-brand-cream transition hover:bg-brand-brown"
                   >
-                    Order on WhatsApp
+                    Order · ₹{p.price}
                   </a>
-                  <button className="rounded-full border border-brand-brown/30 px-4 py-2.5 text-sm font-semibold text-brand-brown transition hover:bg-brand-brown hover:text-brand-cream">
+                  <Link
+                    to="/products/$slug"
+                    params={{ slug: p.slug }}
+                    className="rounded-full border border-brand-brown/30 px-4 py-2.5 text-sm font-semibold text-brand-brown transition hover:bg-brand-brown hover:text-brand-cream"
+                  >
                     Story
-                  </button>
+                  </Link>
                 </div>
               </div>
             </motion.article>
           ))}
         </div>
+
+        <div className="mt-14 text-center">
+          <Link
+            to="/products"
+            className="inline-flex items-center gap-2 rounded-full bg-brand-brown px-7 py-3 text-sm font-semibold uppercase tracking-widest text-brand-cream transition hover:bg-brand-terracotta"
+          >
+            See the full catalog →
+          </Link>
+          <p className="mt-3 text-xs uppercase tracking-widest text-brand-brown/60">
+            {catalog.length} jars · pickles · laddus · podis
+          </p>
+        </div>
       </div>
     </section>
   );
 }
+
 
 function Mothers() {
   return (
