@@ -20,6 +20,7 @@ import sceneEvening from "@/assets/scene-evening.jpg";
 import productPickle from "@/assets/product-pickle.jpg";
 import productLaddu from "@/assets/product-laddu.jpg";
 import productMasala from "@/assets/product-masala.jpg";
+import { products as catalog } from "@/lib/products";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -497,8 +498,6 @@ function Reveal() {
     </section>
   );
 }
-
-import { products as catalog } from "@/lib/products";
 
 const featured = catalog.filter((p) =>
   ["grandmas-summer-mango-pickle", "nutri-laddu", "sunday-kitchen-masala"].includes(p.slug),
