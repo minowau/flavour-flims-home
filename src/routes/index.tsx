@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import {
   motion,
@@ -258,7 +258,7 @@ function TopNav() {
       </a>
       <nav className="hidden items-center gap-6 text-sm text-brand-brown/80 md:flex">
         <a href="#story" className="hover:text-brand-terracotta">Our Story</a>
-        <a href="#products" className="hover:text-brand-terracotta">Products</a>
+        <Link to="/products" className="hover:text-brand-terracotta">Catalog</Link>
         <a href="#mothers" className="hover:text-brand-terracotta">Meet the Mothers</a>
         <a href="#contact" className="hover:text-brand-terracotta">Contact</a>
       </nav>
