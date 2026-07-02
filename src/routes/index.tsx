@@ -117,7 +117,9 @@ function Scene({
   from: number;
   to: number;
 }) {
-  const opacity = useTransform(progress, [from - 0.05, from, to, to + 0.05], [0, 1, 1, 0]);
+  const a = Math.max(0, from - 0.05);
+  const d = Math.min(1, to + 0.05);
+  const opacity = useTransform(progress, [a, from, to, d], [0, 1, 1, 0]);
   const y = useTransform(progress, [from, to], [30, -30]);
   const scale = useTransform(progress, [from, to], [1.08, 1.16]);
 
