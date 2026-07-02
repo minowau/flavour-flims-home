@@ -17,9 +17,6 @@ import sceneRain from "@/assets/scene-rain.jpg";
 import sceneHostel from "@/assets/scene-hostel.jpg";
 import sceneMothers from "@/assets/scene-mothers.jpg";
 import sceneEvening from "@/assets/scene-evening.jpg";
-import productPickle from "@/assets/product-pickle.jpg";
-import productLaddu from "@/assets/product-laddu.jpg";
-import productMasala from "@/assets/product-masala.jpg";
 import { products as catalog } from "@/lib/products";
 
 export const Route = createFileRoute("/")({
