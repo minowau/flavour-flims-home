@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { products, categories, type Category, type SpiceLevel } from "@/lib/products";
 import logoAsset from "@/assets/sastra-logo.png.asset.json";
 
-export const Route = createFileRoute("/products")({
+export const Route = createFileRoute("/products/")({
   head: () => ({
     meta: [
       { title: "The Full Catalog — Sastra Flavours" },

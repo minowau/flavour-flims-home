@@ -1,6 +1,6 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { getProduct, products, type SpiceLevel } from "@/lib/products";
+import { getProduct, products, type Product, type SpiceLevel } from "@/lib/products";
 import logoAsset from "@/assets/sastra-logo.png.asset.json";
 
 export const Route = createFileRoute("/products/$slug")({
