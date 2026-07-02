@@ -84,7 +84,7 @@ function SpiceMeter({ level }: { level: SpiceLevel }) {
 }
 
 function ProductPage() {
-  const { product: p } = Route.useLoaderData();
+  const { product: p } = Route.useLoaderData() as { product: Product };
   const orderUrl = `https://wa.me/918897892299?text=${encodeURIComponent(
     `Hello Amma ❤️ I'd like to order ${p.name} (${p.net_weight}) — ₹${p.price}`,
   )}`;
