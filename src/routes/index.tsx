@@ -830,11 +830,21 @@ function WhatsAppFab() {
 /* ---------- Root ---------- */
 
 function Home() {
-  const [introDone, setIntroDone] = useState(false);
+  const [introDone, setIntroDone] = useState(true);
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (sessionStorage.getItem("sastra_intro_seen") !== "1") {
+      setIntroDone(false);
+    }
+  }, []);
+  const finishIntro = () => {
+    setIntroDone(true);
+    try { sessionStorage.setItem("sastra_intro_seen", "1"); } catch {}
+  };
   return (
     <div className="relative min-h-screen overflow-x-hidden bg-brand-cream text-brand-brown">
       <AnimatePresence>
-        {!introDone && <Intro onDone={() => setIntroDone(true)} />}
+        {!introDone && <Intro onDone={finishIntro} />}
       </AnimatePresence>
       <TopNav />
       <main>
