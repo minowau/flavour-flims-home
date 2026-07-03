@@ -131,8 +131,9 @@ function Scene({
   return (
     <motion.section
       style={{ opacity }}
-      className="relative h-screen w-full overflow-hidden"
+      className="absolute inset-0 h-screen w-full overflow-hidden"
     >
+
       <motion.div style={{ scale }} className="absolute inset-0">
         <img
           src={image}
