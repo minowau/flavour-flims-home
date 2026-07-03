@@ -92,6 +92,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Sastra Flavours — Authentic Home Flavours" },
+      { name: "description", content: "Sastra's Kitchen Tales offers a cinematic e-commerce experience, evoking home and tradition through storytelling." },
+      { property: "og:description", content: "Sastra's Kitchen Tales offers a cinematic e-commerce experience, evoking home and tradition through storytelling." },
+      { name: "twitter:description", content: "Sastra's Kitchen Tales offers a cinematic e-commerce experience, evoking home and tradition through storytelling." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/6852a1d6-1852-4966-9a4b-813e400dc0e3/id-preview-1a65c9fc--ba102b05-92e0-49d6-8070-bda56f82c282.lovable.app-1783079479650.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/6852a1d6-1852-4966-9a4b-813e400dc0e3/id-preview-1a65c9fc--ba102b05-92e0-49d6-8070-bda56f82c282.lovable.app-1783079479650.png" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
