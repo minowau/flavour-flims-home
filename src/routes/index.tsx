@@ -131,8 +131,9 @@ function Scene({
   return (
     <motion.section
       style={{ opacity }}
-      className="relative h-screen w-full overflow-hidden"
+      className="absolute inset-0 h-screen w-full overflow-hidden"
     >
+
       <motion.div style={{ scale }} className="absolute inset-0">
         <img
           src={image}
@@ -368,6 +369,9 @@ function StorySequence() {
     offset: ["start start", "end end"],
   });
 
+  const [loaded, setLoaded] = useState(0);
+
+
   const scenes = [
     {
       image: sceneChildhood,
@@ -413,14 +417,51 @@ function StorySequence() {
     },
   ];
 
+  const total = scenes.length;
+  const ready = loaded >= total;
+
+  useEffect(() => {
+    let cancelled = false;
+    let count = 0;
+    scenes.forEach((s) => {
+      const img = new Image();
+      img.onload = img.onerror = () => {
+        if (cancelled) return;
+        count += 1;
+        setLoaded(count);
+      };
+      img.src = s.image;
+    });
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <section
       id="story"
       ref={ref}
       className="relative"
-      style={{ height: `${scenes.length * 100}vh` }}
+      style={{ height: `${total * 100}vh` }}
     >
       <div className="sticky top-0 h-screen w-full overflow-hidden bg-black">
+        {!ready && (
+          <div className="absolute inset-0 z-30 flex flex-col items-center justify-center gap-6 bg-[oklch(0.14_0.02_55)] px-6 text-center">
+            <div className="animate-kenburns h-40 w-64 rounded-2xl bg-gradient-to-br from-brand-brown/40 via-brand-terracotta/30 to-brand-mustard/30" />
+            <div className="w-full max-w-xs space-y-2">
+              <div className="h-2 w-full overflow-hidden rounded-full bg-brand-cream/10">
+                <div
+                  className="h-full bg-brand-turmeric transition-all duration-300"
+                  style={{ width: `${(loaded / total) * 100}%` }}
+                />
+              </div>
+              <p className="text-[10px] uppercase tracking-[0.35em] text-brand-cream/60">
+                Preparing the story · {loaded}/{total}
+              </p>
+            </div>
+          </div>
+        )}
         {scenes.map((s, i) => (
           <Scene
             key={i}
@@ -431,8 +472,8 @@ function StorySequence() {
             telugu={s.telugu}
             align={i % 2 === 0 ? "left" : "right"}
             progress={scrollYProgress}
-            from={i / scenes.length}
-            to={(i + 1) / scenes.length}
+            from={i / total}
+            to={(i + 1) / total}
           />
         ))}
         <div className="absolute inset-x-0 bottom-6 z-20 flex justify-center gap-2">
@@ -447,6 +488,7 @@ function StorySequence() {
     </section>
   );
 }
+
 
 function Reveal() {
   return (
