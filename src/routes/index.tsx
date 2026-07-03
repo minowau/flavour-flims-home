@@ -369,6 +369,9 @@ function StorySequence() {
     offset: ["start start", "end end"],
   });
 
+  const [loaded, setLoaded] = useState(0);
+
+
   const scenes = [
     {
       image: sceneChildhood,
