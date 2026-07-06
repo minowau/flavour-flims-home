@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { Menu, Plus, ArrowRight, Flame, Clock, Leaf, Award } from "lucide-react";
-import { useRef } from "react";
+import { Menu, Plus, ArrowRight, ArrowLeft, Flame, Clock, Leaf, Award } from "lucide-react";
+import { useRef, useState } from "react";
+import type { Category } from "@/lib/products";
 
 import logoAsset from "@/assets/sastra-logo.png.asset.json";
 import sceneChildhood from "@/assets/scene-childhood.jpg";
