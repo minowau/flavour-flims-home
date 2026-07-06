@@ -326,58 +326,96 @@ function Heritage() {
   );
 }
 
-/* -------- category chips -------- */
+/* -------- products (filter + horizontal scroll with arrows) -------- */
 
-function CategoryChips() {
+type Filter = Category | "All";
+
+function ProductsSection() {
+  const [filter, setFilter] = useState<Filter>("All");
+  const scrollerRef = useRef<HTMLDivElement>(null);
+
+  const filtered = filter === "All" ? catalog : catalog.filter((p) => p.category === filter);
+  const filters: Filter[] = ["All", ...categories];
+
+  const scrollBy = (dir: 1 | -1) => {
+    const el = scrollerRef.current;
+    if (!el) return;
+    const amount = Math.min(el.clientWidth * 0.85, 640);
+    el.scrollBy({ left: dir * amount, behavior: "smooth" });
+  };
+
   return (
-    <section className="px-6 pt-16">
-      <FadeIn>
-        <div className="mb-6 flex items-end justify-between">
-          <h2 className="font-display text-4xl leading-tight text-brand-brown">
-            Small Batch
-            <br />
-            <span className="italic font-light text-brand-terracotta">Flavours</span>
-          </h2>
-          <Link
-            to="/products"
-            className="mb-2 hidden shrink-0 text-[10px] font-semibold uppercase tracking-[0.25em] text-brand-brown/60 hover:text-brand-terracotta sm:block"
-          >
-            View all →
-          </Link>
-        </div>
-      </FadeIn>
-      <FadeIn delay={0.1}>
-        <div className="flex flex-wrap gap-2">
-          {categories.map((c) => (
-            <span
-              key={c}
-              className="rounded-full border border-brand-brown/20 bg-brand-beige/40 px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-brand-brown/70"
-            >
-              {c}
-            </span>
-          ))}
-        </div>
-      </FadeIn>
-    </section>
-  );
-}
+    <section id="products" className="pt-16 pb-20">
+      <div className="px-6">
+        <FadeIn>
+          <div className="mb-6 grid grid-cols-[minmax(0,1fr)_auto] items-end gap-4">
+            <h2 className="font-display text-4xl leading-tight text-brand-brown">
+              Small Batch
+              <br />
+              <span className="italic font-light text-brand-turmeric">Flavours</span>
+            </h2>
+            <div className="hidden items-center gap-2 sm:flex">
+              <button
+                type="button"
+                onClick={() => scrollBy(-1)}
+                aria-label="Scroll products left"
+                className="rounded-full border border-brand-brown/20 bg-brand-cream p-3 text-brand-brown transition hover:border-brand-terracotta hover:bg-brand-terracotta hover:text-brand-cream"
+              >
+                <ArrowLeft className="h-4 w-4" strokeWidth={2} />
+              </button>
+              <button
+                type="button"
+                onClick={() => scrollBy(1)}
+                aria-label="Scroll products right"
+                className="rounded-full border border-brand-brown/20 bg-brand-cream p-3 text-brand-brown transition hover:border-brand-terracotta hover:bg-brand-terracotta hover:text-brand-cream"
+              >
+                <ArrowRight className="h-4 w-4" strokeWidth={2} />
+              </button>
+            </div>
+          </div>
+        </FadeIn>
 
-/* -------- products horizontal scroll -------- */
+        <FadeIn delay={0.1}>
+          <div className="mb-8 flex flex-wrap gap-2">
+            {filters.map((c) => {
+              const active = c === filter;
+              return (
+                <button
+                  key={c}
+                  type="button"
+                  onClick={() => setFilter(c)}
+                  aria-pressed={active}
+                  className={`rounded-full border px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.2em] transition ${
+                    active
+                      ? "border-brand-terracotta bg-brand-terracotta text-brand-cream shadow"
+                      : "border-brand-brown/20 bg-brand-beige/40 text-brand-brown/70 hover:border-brand-terracotta/50 hover:text-brand-terracotta"
+                  }`}
+                >
+                  {c}
+                </button>
+              );
+            })}
+          </div>
+        </FadeIn>
+      </div>
 
-function ProductsScroll() {
-  return (
-    <section id="products" className="pt-8 pb-20">
       <div
+        ref={scrollerRef}
         className="flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-smooth px-6 pb-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
-        {catalog.map((p, i) => (
+        {filtered.length === 0 && (
+          <div className="w-full py-16 text-center text-sm italic text-brand-brown/50">
+            Nothing in this category yet — check back soon.
+          </div>
+        )}
+        {filtered.map((p, i) => (
           <motion.article
             key={p.slug}
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-40px" }}
-            transition={{ duration: 0.7, delay: Math.min(i * 0.05, 0.4), ease: EASE }}
-            className="group w-[78vw] max-w-[320px] shrink-0 snap-start"
+            transition={{ duration: 0.6, delay: Math.min(i * 0.04, 0.3), ease: EASE }}
+            className="group w-[78vw] max-w-[300px] shrink-0 snap-start sm:w-[42vw] lg:w-[300px]"
           >
             <Link to="/products/$slug" params={{ slug: p.slug }} className="block">
               <div className="relative overflow-hidden rounded-3xl bg-brand-beige/50">
@@ -418,33 +456,36 @@ function ProductsScroll() {
           </motion.article>
         ))}
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="flex w-[60vw] max-w-[260px] shrink-0 snap-start items-center justify-center"
-        >
-          <Link
-            to="/products"
-            className="flex h-full w-full flex-col items-center justify-center gap-3 rounded-3xl border-2 border-dashed border-brand-brown/30 p-8 text-center transition hover:border-brand-terracotta hover:bg-brand-beige/40"
+        {filtered.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="flex w-[60vw] max-w-[240px] shrink-0 snap-start items-center justify-center sm:w-[42vw] lg:w-[240px]"
           >
-            <ArrowRight className="h-8 w-8 text-brand-terracotta" strokeWidth={1.5} />
-            <span className="font-display text-lg italic text-brand-brown">See full pantry</span>
-            <span className="text-[10px] uppercase tracking-[0.25em] text-brand-brown/50">
-              {catalog.length} recipes
-            </span>
-          </Link>
-        </motion.div>
+            <Link
+              to="/products"
+              className="flex h-full w-full flex-col items-center justify-center gap-3 rounded-3xl border-2 border-dashed border-brand-brown/30 p-8 text-center transition hover:border-brand-terracotta hover:bg-brand-beige/40"
+            >
+              <ArrowRight className="h-8 w-8 text-brand-terracotta" strokeWidth={1.5} />
+              <span className="font-display text-lg italic text-brand-brown">See full pantry</span>
+              <span className="text-[10px] uppercase tracking-[0.25em] text-brand-brown/50">
+                {catalog.length} recipes
+              </span>
+            </Link>
+          </motion.div>
+        )}
       </div>
       <FadeIn>
-        <p className="text-center text-[10px] uppercase tracking-[0.3em] text-brand-brown/40">
+        <p className="text-center text-[10px] uppercase tracking-[0.3em] text-brand-brown/40 sm:hidden">
           ← Swipe to explore →
         </p>
       </FadeIn>
     </section>
   );
 }
+
 
 /* -------- ritual / how to serve -------- */
 
