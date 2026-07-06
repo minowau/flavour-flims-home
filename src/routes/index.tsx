@@ -748,8 +748,7 @@ function Home() {
         <Ticker />
         <Promises />
         <Heritage />
-        <CategoryChips />
-        <ProductsScroll />
+        <ProductsSection />
         <Ritual />
         <Mothers />
         <FamilyVoices />
